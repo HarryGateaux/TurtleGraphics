@@ -13,6 +13,7 @@ class Turtle
     private float _defaultAngle;
     private float _lineWidth;
     private float _stepSize;   
+    private int _lineCount;
 
     public Turtle(float defaultAngle)
     {
@@ -22,7 +23,8 @@ class Turtle
         _drawStack = new Stack<Vector3[]>();
         _defaultAngle = defaultAngle;
         _lineWidth = 0.01f;
-        _stepSize = 0.1f;
+        _stepSize = 0.05f;
+        _lineCount = 0;
     }
 
     //parses the string instructions to draw the shape
@@ -115,16 +117,20 @@ class Turtle
         Vector3 start = _pointStack.Pop();
         Vector3 end = _pointStack.Pop();
         Color color = new Color(1,1,1);
+
         myLine.transform.position = start;
         myLine.AddComponent<LineRenderer>();
-        LineRenderer lr = myLine.GetComponent<LineRenderer>();
-        lr.material = new Material(Shader.Find("Particles/Standard Unlit"));
-        lr.startColor = color;
-        lr.endColor = color;
-        lr.startWidth = _lineWidth;
-        lr.SetPosition(0, start);
-        lr.SetPosition(1, end);
+        myLine.name = "Line" + _lineCount.ToString();
+
+        LineRenderer lineRenderer = myLine.GetComponent<LineRenderer>();
+        lineRenderer.material = new Material(Shader.Find("Particles/Standard Unlit"));
+        lineRenderer.startColor = color;
+        lineRenderer.endColor = color;
+        lineRenderer.startWidth = _lineWidth;
+        lineRenderer.SetPosition(0, start);
+        lineRenderer.SetPosition(1, end);
         //GameObject.Destroy(myLine, duration);
+        _lineCount++;
     }
 
 }
