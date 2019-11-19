@@ -12,6 +12,7 @@ class Turtle
     private Stack<Vector3[]> _drawStack;
     private float _defaultAngle;
     private float _lineWidth;
+    private float _stepSize;   
 
     public Turtle(float defaultAngle)
     {
@@ -20,7 +21,8 @@ class Turtle
         _pointStack = new Stack<Vector3>();
         _drawStack = new Stack<Vector3[]>();
         _defaultAngle = defaultAngle;
-        _lineWidth = 0.1f;
+        _lineWidth = 0.01f;
+        _stepSize = 0.1f;
     }
 
     //parses the string instructions to draw the shape
@@ -30,28 +32,32 @@ class Turtle
 
             switch(c)
             {
-                case 'F':
+                case 'F': //move fwd and draw
                     Move();
                     break;
 
-                 case 'f':
+                 case 'f': //move fwd only
                     Move(false);
                     break;
 
-                 case '+':
+                 case '+': //turn left by angle
                     Turn(-1 * _defaultAngle);
                     break;
 
-                 case '-':
+                 case '-': //turn right by angle
                     Turn(_defaultAngle);
                     break;
+                     
+                 case '|': //turn around
+                    Turn(180f);
+                    break;                   
 
-                 case '[':
+                 case '[': //push pos & heading to memory
                     var memory = new Vector3[2] {_pos, _heading};
                     _drawStack.Push(memory);
                     break;  
 
-                 case ']':
+                 case ']': //pop pos & heading from memory
 
                     var recall = new Vector3[2];
                     recall = _drawStack.Pop();
@@ -59,7 +65,12 @@ class Turtle
                     _heading = recall[1];
                     break; 
 
-                 case '"':
+                 case '"': //rescale step size
+
+                    _stepSize *= 0.5f;
+                    break;
+
+                 case '!': //rescale line width
 
                     _lineWidth *= 0.5f;
                     break;
@@ -71,20 +82,18 @@ class Turtle
         }
     }
 
-
-
-    private void Move (bool draw = true, float distance = 0.1f) {
+    private void Move (bool draw = true) {
 
         if(draw){
 
             AddPoint();
-            _pos += _heading * distance;
+            _pos += _heading * _stepSize;
             AddPoint();
             DrawLine();
 
         } else {
 
-            _pos += _heading * distance;
+            _pos += _heading * _stepSize;
         }
     }
 
@@ -109,7 +118,7 @@ class Turtle
         myLine.transform.position = start;
         myLine.AddComponent<LineRenderer>();
         LineRenderer lr = myLine.GetComponent<LineRenderer>();
-        lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
+        lr.material = new Material(Shader.Find("Particles/Standard Unlit"));
         lr.startColor = color;
         lr.endColor = color;
         lr.startWidth = _lineWidth;

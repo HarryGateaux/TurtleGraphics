@@ -221,9 +221,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cd5561b60a0c0a42b4f5343aa40bcf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _texture: {fileID: 0}
-  _mesh: {fileID: 0}
-  _material: {fileID: 0}
 --- !u!4 &1052305306
 Transform:
   m_ObjectHideFlags: 0
