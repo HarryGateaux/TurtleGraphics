@@ -30,6 +30,7 @@ class Turtle
     //parses the string instructions to draw the shape
     public void Decode(string instructions){
 
+        if(instructions == null) {throw new NullReferenceException("ERROR : null input to Turtle");}
         foreach(char c in instructions){
 
             switch(c)

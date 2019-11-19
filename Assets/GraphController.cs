@@ -6,12 +6,17 @@ public class GraphController : MonoBehaviour {
 
 	// Use this for initialization
 	private void Start () {
-		//DrawLine(new Vector3(0, 0, 0), new Vector3(0, 1, 0), new Color(0,0,0));
 
-		LSystem ls = new LSystem("F", 4);
+		//create L system
+		LSystem ls = new LSystem("X", 4, "FX");
+		ls.AddRule("X", "F[+X][-X]");
+        ls.AddRule("F", "F");
+		ls.AddTerminal("X","");
 		string lSystemOutput = ls.Generate();
+		Debug.Log(lSystemOutput);
 
-		Turtle turtle = new Turtle(90f);
+		//use turtle to draw l system
+		Turtle turtle = new Turtle(25f);
 		turtle.Decode(lSystemOutput);
 
     }
@@ -20,22 +25,6 @@ public class GraphController : MonoBehaviour {
 	void Update () {
 
 	}
-
-// //generates random points
-// 	IEnumerable<Vector3> SetPoints(int count)
-//     {
-//         while (count > 0)
-//         {
-//             float x = Random.value;
-//             float y = Random.value;
-
-//             var color = new Color(1, 1, 1, 1);
-
-//             count--;
-//             yield return new Vector2(x, y);
-            
-//         }
-//     }
 
 }
 
