@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Newtonsoft.Json;
 
 public class LSystem
 {    
@@ -22,7 +23,7 @@ public class LSystem
     private void ValidateAxiom(){
 
         foreach(char c in _axiom){
-            if(!_ruleSet._symbols.Contains(c))
+            if(!_ruleSet._alphabet.Contains(c))
             {
                 Debug.Log("ERROR : " + _axiom + " not contained in symbol set, please check");
                 _validAxiom = false;
@@ -54,12 +55,12 @@ public class LSystem
 
     public void Information(){
 
-        Debug.Log(string.Format("Axiom : {}", _axiom));
+        Debug.Log(string.Format("Axiom : {0}", _axiom));
         foreach(KeyValuePair<string, string> rule in _ruleSet._rules)
         {
-            Debug.Log(string.Format("Rule : {} > {}", rule.Key, rule.Value));
+            Debug.Log(string.Format("Rule : {0} > {1}", rule.Key, rule.Value));
         }
-        Debug.Log(string.Format("Output : {}", _generatedString));
+        Debug.Log(string.Format("Output : {0}", _generatedString));
         
     }
 
@@ -91,21 +92,22 @@ public class RuleSet
 {
 
     public Dictionary<string, string> _rules, _terminals;
-    public char[] _symbols;
+    public char[] _alphabet;
     public bool _valid;
 
-    public RuleSet(string symbols){
+    [JsonConstructor]
+    public RuleSet(char[] alphabet){
         
         _rules = new Dictionary<string, string>();
         _terminals = new Dictionary<string, string>();
-        _symbols = symbols.ToCharArray();
+        _alphabet = alphabet;
         _valid = true;
         
     }
 
     public void AddRule(string input, string output){
 
-        if(_symbols.Contains(char.Parse(input))){
+        if(_alphabet.Contains(char.Parse(input))){
 
             _rules.Add(input, output);
 
@@ -119,7 +121,7 @@ public class RuleSet
     //defines what each symbol maps to in final generation. Every non "F" symbol requires a terminal, otherwise the turtle no comprende
     public void AddTerminal(string input, string output){
 
-        if(_symbols.Contains(char.Parse(input))){
+        if(_alphabet.Contains(char.Parse(input))){
 
             _terminals.Add(input, output);
 
@@ -136,7 +138,7 @@ public class RuleSet
         char[] turtleChars = turtleString.ToCharArray();
         string terminalKeys = _terminals.Keys.ToString();
 
-        foreach(char symbol in _symbols){
+        foreach(char symbol in _alphabet){
             if(!turtleChars.Contains(symbol) && !_terminals.ContainsKey(symbol.ToString())) {
                 
                 Debug.Log("ERROR : Missing Terminal value for the symbol " + symbol);

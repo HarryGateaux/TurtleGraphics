@@ -1,0 +1,24 @@
+{
+  "one": {
+    "_rules": {
+      "F": "F-FF--F-F"
+    },
+    "_terminals": {},
+    "_alphabet": [
+      "F",
+      "-"
+    ],
+    "_valid": true
+  },
+  "two": {
+    "_rules": {
+      "F": "F-F[+F]ff"
+    },
+    "_terminals": {},
+    "_alphabet": [
+      "F",
+      "-"
+    ],
+    "_valid": true
+  }
+}
