@@ -1,77 +1,46 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
 public class LSystem
-{
-    public Dictionary<string, string> _ruleset, _terminals;
+{    
     private string _axiom;
     private string _generatedString;
     private int _numIterations;
-    private char[] _symbols;
-
-    private bool _validSetup;
-
-    public LSystem(string axiom, int numIterations, string symbols)
+    private RuleSet _ruleSet;
+    private bool _validAxiom;
+    public LSystem(string axiom, int numIterations, RuleSet rs)
     {
         _axiom = axiom;
-        _ruleset = new Dictionary<string, string>();
-        _terminals = new Dictionary<string, string>();
         _numIterations = numIterations;
-        _symbols = symbols.ToCharArray();
+        _validAxiom = true;
+        _ruleSet = rs;
         ValidateAxiom();
     }
 
+    //checks whether the axiom is valid
     private void ValidateAxiom(){
 
-        _validSetup = true;
-        if(!_symbols.Contains(char.Parse(_axiom)))
-        {
-            Debug.Log("ERROR : " + _axiom + " not contained in symbol set, please check");
-            _validSetup = false;
-        }
-
-    }
-    //defines what each symbol maps to in the next generation
-    public void AddRule(string input, string output){
-
-        if(_symbols.Contains(char.Parse(input))){
-
-            _ruleset.Add(input, output);
-
-        } else {
-            
-            Debug.Log("ERROR : " + input + " not in symbol set, rule not added");
-            _validSetup = false;
-        }
-    }
-
-    //defines what each symbol maps to in final generation
-    public void AddTerminal(string input, string output){
-
-        if(_symbols.Contains(char.Parse(input))){
-
-            _terminals.Add(input, output);
-
-        } else {
-            
-            Debug.Log("ERROR : " + input + " not in symbol set, rule not added");
-            _validSetup = false;
+        foreach(char c in _axiom){
+            if(!_ruleSet._symbols.Contains(c))
+            {
+                Debug.Log("ERROR : " + _axiom + " not contained in symbol set, please check");
+                _validAxiom = false;
+            }
         }
     }
 
     //maps the final generation with terminals
     private void ApplyTerminals(){
 
-        foreach(string s in _terminals.Keys){
-            _generatedString = _generatedString.Replace(s , _terminals[s]);
+        foreach(string s in _ruleSet._terminals.Keys){
+            _generatedString = _generatedString.Replace(s , _ruleSet._terminals[s]);
         }
     }
 
     public string Generate(){
 
-        if(_validSetup && _ruleset.Count != 0){
+        if(_validAxiom && _ruleSet._valid && _ruleSet._rules.Count != 0){
             _generatedString = ReplaceRecursive(_axiom, _numIterations);
             ApplyTerminals();
             return _generatedString;
@@ -81,7 +50,17 @@ public class LSystem
             Debug.Log("ERROR : LSystem not generated, problem with setup, please check");
             return null;
         }
+    }
 
+    public void Information(){
+
+        Debug.Log(string.Format("Axiom : {}", _axiom));
+        foreach(KeyValuePair<string, string> rule in _ruleSet._rules)
+        {
+            Debug.Log(string.Format("Rule : {} > {}", rule.Key, rule.Value));
+        }
+        Debug.Log(string.Format("Output : {}", _generatedString));
+        
     }
 
     private string ReplaceRecursive(string prevString, int numIterations){
@@ -93,10 +72,10 @@ public class LSystem
         foreach(char c in prevString)
         {   try
             {
-                nextString += _ruleset[c.ToString()];
+                nextString += _ruleSet._rules[c.ToString()];
             }
 
-            catch 
+            catch //skips the char if not in ruleset
             {
                 nextString += c;
             }
@@ -104,4 +83,72 @@ public class LSystem
         numIterations--;
         return ReplaceRecursive(nextString, numIterations);   
     }
+}
+
+
+//rule set class for use in LSystem
+public class RuleSet
+{
+
+    public Dictionary<string, string> _rules, _terminals;
+    public char[] _symbols;
+    public bool _valid;
+
+    public RuleSet(string symbols){
+        
+        _rules = new Dictionary<string, string>();
+        _terminals = new Dictionary<string, string>();
+        _symbols = symbols.ToCharArray();
+        _valid = true;
+        
+    }
+
+    public void AddRule(string input, string output){
+
+        if(_symbols.Contains(char.Parse(input))){
+
+            _rules.Add(input, output);
+
+        } else {
+            
+            Debug.Log("ERROR : " + input + " not in symbol set, rule not added to rule set");
+            _valid = false;
+        }
+    }
+
+    //defines what each symbol maps to in final generation. Every non "F" symbol requires a terminal, otherwise the turtle no comprende
+    public void AddTerminal(string input, string output){
+
+        if(_symbols.Contains(char.Parse(input))){
+
+            _terminals.Add(input, output);
+
+        } else {
+            
+            Debug.Log("ERROR : " + input + " not in symbol set, rule not added to rule set");
+            _valid = false;
+        }
+    }
+
+    public void ValidateTerminals(){
+
+        string turtleString = "Ff-+|[]!\"";
+        char[] turtleChars = turtleString.ToCharArray();
+        string terminalKeys = _terminals.Keys.ToString();
+
+        foreach(char symbol in _symbols){
+            if(!turtleChars.Contains(symbol) && !_terminals.ContainsKey(symbol.ToString())) {
+                
+                Debug.Log("ERROR : Missing Terminal value for the symbol " + symbol);
+                _valid = false;
+
+            }
+
+        }
+
+
+
+        
+    }
+
 }
