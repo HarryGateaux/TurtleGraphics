@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Newtonsoft.Json;
 
 public class LSystem
 {    
@@ -95,7 +94,6 @@ public class RuleSet
     public char[] _alphabet;
     public bool _valid;
 
-    [JsonConstructor]
     public RuleSet(char[] alphabet){
         
         _rules = new Dictionary<string, string>();

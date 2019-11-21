@@ -5,8 +5,10 @@ using System.Collections.Generic;
 
 public class GraphController : MonoBehaviour {
 
-	// Use this for initialization
-	private void Start () {
+    // Use this for initialization
+    Turtle turtle;
+
+    private void Start () {
 
 		//create ruleset
 		RuleSet rs = new RuleSet(new char[2]{'F','-'});
@@ -37,19 +39,18 @@ public class GraphController : MonoBehaviour {
 		LSystem ls = new LSystem("F-F-F-F", 4, rsTest);
 		string lSystemOutput = ls.Generate();
 		ls.Information();
-		
-
+	
 		
 		//use turtle to draw l system
-		Turtle turtle = new Turtle(90f);
+		turtle = new Turtle(90f);
 		turtle.Decode(lSystemOutput);
-
+        turtle.DrawMesh();
     }
 
 	// Update is called once per frame
 	void Update () {
-
-	}
+        gameObject.GetComponent<MeshFilter>().mesh = turtle.DrawTurtle();
+    }
 
 }
 
