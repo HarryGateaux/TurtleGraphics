@@ -34,7 +34,17 @@ public class GraphController : MonoBehaviour {
     }
 }
 
-//subdivision as rescaling
+//subdivision as rescaling, read catmull clark??
 //evolve an L system that approximates a line?
-//database of systems
+//database of systems, with classification??
 //quad subdivision and apply evo algo
+//need to allow rules with input of length 2
+
+
+//next steps, evolve a rule
+//allow user choice in evo algo
+//tidy up evo algo
+//populate more L systems from the book, 20??
+
+
+

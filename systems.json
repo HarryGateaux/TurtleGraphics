@@ -5,12 +5,10 @@
       "F": "F-FF--F-F"
     },
     "_terminals": {},
-    "_alphabet": [
-      "F",
-      "-"
-    ],
+    "_alphabet": "F",
     "_valid": true,
-    "_angle": 90.0
+    "_angle": 90.0,
+    "_category": "Fractal"
   },
   "1": {
     "_axiom": "F-F-F-F",
@@ -18,12 +16,10 @@
       "F": "F+F-F-F+F"
     },
     "_terminals": {},
-    "_alphabet": [
-      "F",
-      "-"
-    ],
+    "_alphabet": "F",
     "_valid": true,
-    "_angle": 90.0
+    "_angle": 90.0,
+    "_category": "Fractal"
   },
   "2": {
     "_axiom": "F-F-F-F",
@@ -31,12 +27,10 @@
       "F": "F-Ff[F-F]-F+F"
     },
     "_terminals": {},
-    "_alphabet": [
-      "F",
-      "-"
-    ],
+    "_alphabet": "F",
     "_valid": true,
-    "_angle": 90.0
+    "_angle": 90.0,
+    "_category": "Fractal"
   },
   "3": {
     "_axiom": "G",
@@ -47,13 +41,10 @@
     "_terminals": {
       "G": ""
     },
-    "_alphabet": [
-      "F",
-      "G",
-      "-"
-    ],
+    "_alphabet": "FG",
     "_valid": true,
-    "_angle": 45.0
+    "_angle": 45.0,
+    "_category": "Tree"
   },
   "4": {
     "_axiom": "G",
@@ -64,12 +55,24 @@
     "_terminals": {
       "G": ""
     },
-    "_alphabet": [
-      "F",
-      "G",
-      "-"
-    ],
+    "_alphabet": "FG",
     "_valid": true,
-    "_angle": 25.0
+    "_angle": 25.0,
+    "_category": "Tree"
+  },
+  "5": {
+    "_axiom": "FX",
+    "_rules": {
+      "X": "X+YF+",
+      "Y": "-FX-Y"
+    },
+    "_terminals": {
+      "X": "",
+      "Y": ""
+    },
+    "_alphabet": "FXY",
+    "_valid": true,
+    "_angle": 90.0,
+    "_category": "Fractal"
   }
 }
