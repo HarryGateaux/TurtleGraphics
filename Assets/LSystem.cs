@@ -89,18 +89,20 @@ public class LSystem
 //rule set class for use in LSystem
 public class RuleSet
 {
-
+    public string _axiom;
     public Dictionary<string, string> _rules, _terminals;
     public char[] _alphabet;
     public bool _valid;
+    public float _angle;
 
-    public RuleSet(char[] alphabet){
-        
+    public RuleSet(string axiom, char[] alphabet, float angle){
+
+        _axiom = axiom;
+        _angle = angle;
         _rules = new Dictionary<string, string>();
         _terminals = new Dictionary<string, string>();
         _alphabet = alphabet;
-        _valid = true;
-        
+        _valid = true; 
     }
 
     public void AddRule(string input, string output){
@@ -143,12 +145,7 @@ public class RuleSet
                 _valid = false;
 
             }
-
         }
-
-
-
-        
     }
 
 }

@@ -12,8 +12,8 @@ class Turtle
     Stack<Vector3[]> _drawStack;
     float _defaultAngle;
     float _lineWidth;
-    float _stepSize;   
-    int _lineCount;
+    float _stepSize;
+    float _lineRadius;
 
     List<Mesh> _lineMeshes;
     List<Matrix4x4> _transforms;
@@ -30,9 +30,8 @@ class Turtle
         _defaultAngle = defaultAngle;
         _lineWidth = 0.01f;
         _stepSize = 0.05f;
-        _lineCount = 0;
         _lineMeshes = new List<Mesh>();
-        _transforms = new List<Matrix4x4>();
+        _lineRadius = 0.1f;
     }
 
     //parses the string instructions to draw the shape
@@ -93,36 +92,19 @@ class Turtle
         }
     }
 
-    //private void Move (bool draw = true) {
-
-    //    if(draw){
-
-    //        AddPoint();
-    //        _pos += _heading * _stepSize;
-    //        AddPoint();
-    //        DrawLine();
-
-    //    } else {
-
-    //        _pos += _heading * _stepSize;
-    //    }
-    //}
-
     private void Move(bool draw = true)
     {
 
         if (draw)
         {
-
             AddPoint();
             _pos += _heading * _stepSize;
             AddPoint();
             DrawLineMesh();
-
+            //DrawLine();
         }
         else
-        {
-
+        { 
             _pos += _heading * _stepSize;
         }
     }
@@ -138,7 +120,7 @@ class Turtle
         _heading = rotation * _heading;
     }
 
-    //draws a line connecting the two points in the point stack
+    //deprecated : draws a line connecting the two points in the point stack
     private void DrawLine(){
 
         GameObject myLine = new GameObject();
@@ -148,7 +130,6 @@ class Turtle
 
         myLine.transform.position = start;
         myLine.AddComponent<LineRenderer>();
-        myLine.name = "Line" + _lineCount.ToString();
 
         LineRenderer lineRenderer = myLine.GetComponent<LineRenderer>();
         lineRenderer.material = new Material(Shader.Find("Particles/Standard Unlit"));
@@ -158,71 +139,61 @@ class Turtle
         lineRenderer.SetPosition(0, start);
         lineRenderer.SetPosition(1, end);
         //GameObject.Destroy(myLine, duration);
-        _lineCount++;
     }
 
-    //replace drawline with mesh lines
-    //requires the points, and a list of the lines
+    //draws a line as a mesh
     private void DrawLineMesh()
     {
 
         Vector3 start = _pointStack.Pop();
         Vector3 end = _pointStack.Pop();
 
-        Vector3 lineVector = end - start;
+        Vector3 lineVector = end - start; //vector pointing from start to end
         Vector3 lineNormal = Vector3.Cross(lineVector, Vector3.forward);
-        Vector3 lineMidPoint = start + lineVector / 2f;
 
-        Vector3 startshift = start + 0.1f * lineNormal;
-        Vector3 endshift = startshift + lineVector;
+        //draw a rectangle around the start and end points to represent a line
+        Vector3 startL = start - _lineRadius * lineNormal;
+        Vector3 endL = startL + lineVector;
+
+        Vector3 startR = start + _lineRadius * lineNormal;
+        Vector3 endR = startR + lineVector;
 
         Vector3[] vertices = new Vector3[4];
-        int[] indices = new int[6] { 0, 2, 3, 3, 1, 0 };
 
-        vertices[0] = start;
-        vertices[1] = startshift;
-        vertices[2] = end;
-        vertices[3] = endshift;
+        vertices[0] = startL;
+        vertices[1] = startR;
+        vertices[2] = endL;
+        vertices[3] = endR;
+
+        int[] indices = new int[6] { 0, 2, 3, 3, 1, 0 }; //vertex ordering, must be clockwise
 
         Mesh mesh = new Mesh();
         mesh.vertices = vertices;
-        //mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+        //mesh.SetIndices(indices, MeshTopology.Lines, 0); //can't use different mesh topologies with combine mesh..
         mesh.triangles = indices;
         _lineMeshes.Add(mesh);
-
-        var rotation = Quaternion.identity;
-        var scale = Vector3.one;// * 0.01f;
-        Matrix4x4 transform = Matrix4x4.TRS(lineMidPoint, rotation, scale);
-
-        _transforms.Add(transform);
     }
 
+    //combines the line meshes into a final mesh
     public void DrawMesh()
     {
         //combine meshes
         var finalMesh = new Mesh();
 
-        // var instances = _lineMeshes
-        //   .Select(mesh => new CombineInstance() { mesh = mesh});
-        CombineInstance[] instances = new CombineInstance[_lineMeshes.Count];
-
-        for(int i = 0; i < _lineMeshes.Count; i++)
-        {
-            CombineInstance instance = new CombineInstance();
-            instance.mesh = _lineMeshes[i];
-            instance.transform = _transforms[i];
-            instances[i] = instance;
-        }
-
+        var instances = _lineMeshes.Select(m => new CombineInstance() { mesh = m, transform = Matrix4x4.identity });
 
         finalMesh.CombineMeshes(instances.ToArray());
-
         _renderMesh = finalMesh;
     }
 
-    public void DrawTurtle()
+    public Mesh DrawTurtle()
     {
-        //return _renderMesh;
-        Graphics.DrawMesh(_renderMesh, Matrix4x4.identity, _material, 0);
+        return _renderMesh;
+        //Graphics.DrawMesh(_renderMesh, Matrix4x4.identity, _material, 0);
     }
 }
+
+//questions :
+// why is the line not extending the full length
+// is JSON sensible?
+//quad subdivision

@@ -41,29 +41,36 @@ public static class InitialiseDB
 
 
         //create ruleset
-        RuleSet rs = new RuleSet(new char[2] { 'F', '-' });
+        RuleSet rs = new RuleSet("F-F-F-F", new char[2] { 'F', '-' }, 90f);
         rs.AddRule("F", "F-FF--F-F");
         rs.ValidateTerminals();
 
-        RuleSet rs2 = new RuleSet(new char[2] { 'F', '-' });
+        RuleSet rs2 = new RuleSet("F-F-F-F", new char[2] { 'F', '-' }, 90f);
         rs2.AddRule("F", "F+F-F-F+F");
         rs2.ValidateTerminals();
 
-        RuleSet rs3 = new RuleSet(new char[2] { 'F', '-' });
+        RuleSet rs3 = new RuleSet("F-F-F-F", new char[2] { 'F', '-' }, 90f);
         rs3.AddRule("F", "F-Ff[F-F]-F+F");
         rs3.ValidateTerminals();
 
-        RuleSet rs4 = new RuleSet(new char[3] { 'F', 'G', '-' });
+        RuleSet rs4 = new RuleSet("G", new char[3] { 'F', 'G', '-' }, 45f);
         rs4.AddRule("F", "FF");
-        rs4.AddRule("G", "G[+F][-F]");
+        rs4.AddRule("G", "F+[[G]-G]-F[-FG]+G");
         rs4.AddTerminal("G", "");
         rs4.ValidateTerminals();
+
+        RuleSet rs5 = new RuleSet("G", new char[3] { 'F', 'G', '-' }, 25f);
+        rs5.AddRule("F", "FF");
+        rs5.AddRule("G", "F+[[G]-G]-F[-FG]+G");
+        rs5.AddTerminal("G", "");
+        rs5.ValidateTerminals();
 
         var DB = new LSystemDB();
         DB.AddSystem(rs);
         DB.AddSystem(rs2);
         DB.AddSystem(rs3); 
         DB.AddSystem(rs4);
+        DB.AddSystem(rs5);
 
         DB.WriteToFile();
     }

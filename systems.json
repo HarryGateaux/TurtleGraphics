@@ -1,5 +1,6 @@
 {
   "0": {
+    "_axiom": "F-F-F-F",
     "_rules": {
       "F": "F-FF--F-F"
     },
@@ -8,9 +9,11 @@
       "F",
       "-"
     ],
-    "_valid": true
+    "_valid": true,
+    "_angle": 90.0
   },
   "1": {
+    "_axiom": "F-F-F-F",
     "_rules": {
       "F": "F+F-F-F+F"
     },
@@ -19,9 +22,11 @@
       "F",
       "-"
     ],
-    "_valid": true
+    "_valid": true,
+    "_angle": 90.0
   },
   "2": {
+    "_axiom": "F-F-F-F",
     "_rules": {
       "F": "F-Ff[F-F]-F+F"
     },
@@ -30,12 +35,14 @@
       "F",
       "-"
     ],
-    "_valid": true
+    "_valid": true,
+    "_angle": 90.0
   },
   "3": {
+    "_axiom": "G",
     "_rules": {
       "F": "FF",
-      "G": "G[+F][-F]"
+      "G": "F+[[G]-G]-F[-FG]+G"
     },
     "_terminals": {
       "G": ""
@@ -45,6 +52,24 @@
       "G",
       "-"
     ],
-    "_valid": true
+    "_valid": true,
+    "_angle": 45.0
+  },
+  "4": {
+    "_axiom": "G",
+    "_rules": {
+      "F": "FF",
+      "G": "F+[[G]-G]-F[-FG]+G"
+    },
+    "_terminals": {
+      "G": ""
+    },
+    "_alphabet": [
+      "F",
+      "G",
+      "-"
+    ],
+    "_valid": true,
+    "_angle": 25.0
   }
 }

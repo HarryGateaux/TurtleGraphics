@@ -8,6 +8,7 @@ public class GraphController : MonoBehaviour {
 
     // Use this for initialization
     Turtle turtle;
+    public Material material;
 
     private void Start () {
 
@@ -20,24 +21,21 @@ public class GraphController : MonoBehaviour {
 		var rsTest = systemsJSON[systemchoice];
 		
 		//create L system
-		LSystem ls = new LSystem("F-F-F-F", 4, rsTest);
+		LSystem ls = new LSystem(rsTest._axiom, 4, rsTest);
 		string lSystemOutput = ls.Generate();
 		ls.Information();
-	
 		
 		//use turtle to draw l system
-		turtle = new Turtle(90f);
+		turtle = new Turtle(rsTest._angle);
 		turtle.Decode(lSystemOutput);
         turtle.DrawMesh();
     }
 
 	// Update is called once per frame
 	void Update () {
-        turtle.DrawTurtle();
+        Graphics.DrawMesh(turtle.DrawTurtle(), Matrix4x4.identity, material, 0);
     }
-
 }
-
 
 //subdivision as rescaling
 //evolve an L system that approximates a line?
