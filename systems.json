@@ -1,5 +1,5 @@
 {
-  "one": {
+  "0": {
     "_rules": {
       "F": "F-FF--F-F"
     },
@@ -10,13 +10,39 @@
     ],
     "_valid": true
   },
-  "two": {
+  "1": {
     "_rules": {
-      "F": "F-F[+F]ff"
+      "F": "F+F-F-F+F"
     },
     "_terminals": {},
     "_alphabet": [
       "F",
+      "-"
+    ],
+    "_valid": true
+  },
+  "2": {
+    "_rules": {
+      "F": "F-Ff[F-F]-F+F"
+    },
+    "_terminals": {},
+    "_alphabet": [
+      "F",
+      "-"
+    ],
+    "_valid": true
+  },
+  "3": {
+    "_rules": {
+      "F": "FF",
+      "G": "G[+F][-F]"
+    },
+    "_terminals": {
+      "G": ""
+    },
+    "_alphabet": [
+      "F",
+      "G",
       "-"
     ],
     "_valid": true

@@ -169,13 +169,12 @@ class Turtle
         Vector3 start = _pointStack.Pop();
         Vector3 end = _pointStack.Pop();
 
-        Vector3 lineDirection = end - start;
-        Vector3 norm = Vector3.Cross(lineDirection, Vector3.forward);
+        Vector3 lineVector = end - start;
+        Vector3 lineNormal = Vector3.Cross(lineVector, Vector3.forward);
+        Vector3 lineMidPoint = start + lineVector / 2f;
 
-        Vector3 startshift = start + 0.2f * norm;
-        Vector3 endshift = startshift + lineDirection;
-        //Vector3 start = new Vector3(0, 0, 0);
-        //Vector3 end = new Vector3(5, 5, 0);
+        Vector3 startshift = start + 0.1f * lineNormal;
+        Vector3 endshift = startshift + lineVector;
 
         Vector3[] vertices = new Vector3[4];
         int[] indices = new int[6] { 0, 2, 3, 3, 1, 0 };
@@ -185,10 +184,6 @@ class Turtle
         vertices[2] = end;
         vertices[3] = endshift;
 
-
-
-        //vertices[3] = endshift;
-
         Mesh mesh = new Mesh();
         mesh.vertices = vertices;
         //mesh.SetIndices(indices, MeshTopology.Triangles, 0);
@@ -197,7 +192,7 @@ class Turtle
 
         var rotation = Quaternion.identity;
         var scale = Vector3.one;// * 0.01f;
-        Matrix4x4 transform = Matrix4x4.TRS(start, rotation, scale);
+        Matrix4x4 transform = Matrix4x4.TRS(lineMidPoint, rotation, scale);
 
         _transforms.Add(transform);
     }
@@ -222,73 +217,12 @@ class Turtle
 
         finalMesh.CombineMeshes(instances.ToArray());
 
-        Debug.Log(finalMesh.vertexCount);
         _renderMesh = finalMesh;
     }
 
-    public Mesh DrawTurtle()
+    public void DrawTurtle()
     {
-        return _renderMesh;
-        //Graphics.DrawMesh(_renderMesh, Matrix4x4.identity, _material, 0);
-        //Graphics.DrawMesh(_renderMesh, Matrix4x4.identity, _material, 0);
+        //return _renderMesh;
+        Graphics.DrawMesh(_renderMesh, Matrix4x4.identity, _material, 0);
     }
 }
-
-
-//public class Controller
-//{
-
-
-//    void Start()
-//    {
-//        Mesh mesh = new Mesh();
-
-//        Vertices = RandomPoints(100).ToArray();
-//        //Vertices = new Vector3[8];
-//        Lines = new int[100];
-//        //Colors = new Color[Vertices.Length];
-
-//        Vertices[0] = new Vector3(0, 0);
-//        Vertices[1] = new Vector3(1, 0);
-//        Vertices[2] = new Vector3(1, 1);
-//        Vertices[3] = new Vector3(0, 1);
-
-//        System.Random r = new System.Random();
-//        for (int i = 0; i < 100; i++)
-//            Lines[i] = r.Next(100);
-
-//        //Colors[0] = Color.red;
-//        //Colors[1] = Color.cyan;
-//        //Colors[2] = Color.black;
-//        //Colors[3] = Color.grey;
-
-//        //mesh.colors = Colors;
-
-//        mesh.vertices = Vertices;
-//        //mesh.uv = UVs;
-//        //mesh.triangles = Points;
-//        mesh.SetIndices(Lines, MeshTopology.Lines, 0);
-
-//        GameObject gameObject = new GameObject("Mesh", typeof(MeshRenderer), typeof(MeshFilter));
-//        gameObject.transform.localScale = new Vector3(5, 5, 1);
-
-//        gameObject.GetComponent<MeshRenderer>().material = material;
-//        gameObject.GetComponent<MeshFilter>().mesh = mesh;
-
-//    }
-
-//    IEnumerable<Vector3> RandomPoints(int count)
-//    {
-//        while (count > 0)
-//        {
-//            float x = Random.value;
-//            float y = Random.value;
-//            var position = new Vector3(x, y, 0);
-//            count--;
-//            yield return position;
-//        }
-//    }
-
-
-
-//}
