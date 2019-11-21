@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Newtonsoft.Json;
 
 public class LSystem
 {    
@@ -8,26 +9,11 @@ public class LSystem
     private string _generatedString;
     private int _numIterations;
     private RuleSet _ruleSet;
-    private bool _validAxiom;
     public LSystem(string axiom, int numIterations, RuleSet rs)
     {
         _axiom = axiom;
         _numIterations = numIterations;
-        _validAxiom = true;
         _ruleSet = rs;
-        ValidateAxiom();
-    }
-
-    //checks whether the axiom is valid
-    private void ValidateAxiom(){
-
-        foreach(char c in _axiom){
-            if(!_ruleSet._alphabet.Contains(c))
-            {
-                Debug.Log("ERROR : " + _axiom + " not contained in symbol set, please check");
-                _validAxiom = false;
-            }
-        }
     }
 
     //maps the final generation with terminals
@@ -40,7 +26,7 @@ public class LSystem
 
     public string Generate(){
 
-        if(_validAxiom && _ruleSet._valid && _ruleSet._rules.Count != 0){
+        if(_ruleSet._valid && _ruleSet._rules.Count != 0){
             _generatedString = ReplaceRecursive(_axiom, _numIterations);
             ApplyTerminals();
             return _generatedString;
@@ -102,7 +88,7 @@ public class RuleSet
         _rules = new Dictionary<string, string>();
         _terminals = new Dictionary<string, string>();
         _alphabet = alphabet;
-        _valid = true; 
+        _valid = true;
     }
 
     public void AddRule(string input, string output){
@@ -132,20 +118,27 @@ public class RuleSet
         }
     }
 
-    public void ValidateTerminals(){
+    public void Validate(){
 
+        string terminalKeys = _terminals.Keys.ToString();
         string turtleString = "Ff-+|[]!\"";
         char[] turtleChars = turtleString.ToCharArray();
-        string terminalKeys = _terminals.Keys.ToString();
 
-        foreach(char symbol in _alphabet){
+        foreach (char symbol in _alphabet){
             if(!turtleChars.Contains(symbol) && !_terminals.ContainsKey(symbol.ToString())) {
                 
                 Debug.Log("ERROR : Missing Terminal value for the symbol " + symbol);
                 _valid = false;
+            }
+        }
 
+        foreach (char symbol in _axiom)
+        {
+            if (!turtleChars.Contains(symbol) && !_alphabet.Contains(symbol))
+            {
+                Debug.Log("ERROR : " + _axiom + " not contained in symbol set, please check");
+                _valid = false;
             }
         }
     }
-
 }

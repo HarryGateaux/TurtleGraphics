@@ -36,34 +36,30 @@ public static class InitialiseDB
 {
     public static void Initialise()
     {
-        //fix issue with checking the alphabet versus the axiom
-        //put the axiom into the L System
-
-
         //create ruleset
         RuleSet rs = new RuleSet("F-F-F-F", new char[2] { 'F', '-' }, 90f);
         rs.AddRule("F", "F-FF--F-F");
-        rs.ValidateTerminals();
+        rs.Validate();
 
         RuleSet rs2 = new RuleSet("F-F-F-F", new char[2] { 'F', '-' }, 90f);
         rs2.AddRule("F", "F+F-F-F+F");
-        rs2.ValidateTerminals();
+        rs2.Validate();
 
         RuleSet rs3 = new RuleSet("F-F-F-F", new char[2] { 'F', '-' }, 90f);
         rs3.AddRule("F", "F-Ff[F-F]-F+F");
-        rs3.ValidateTerminals();
+        rs3.Validate();
 
         RuleSet rs4 = new RuleSet("G", new char[3] { 'F', 'G', '-' }, 45f);
         rs4.AddRule("F", "FF");
         rs4.AddRule("G", "F+[[G]-G]-F[-FG]+G");
         rs4.AddTerminal("G", "");
-        rs4.ValidateTerminals();
+        rs4.Validate();
 
         RuleSet rs5 = new RuleSet("G", new char[3] { 'F', 'G', '-' }, 25f);
         rs5.AddRule("F", "FF");
         rs5.AddRule("G", "F+[[G]-G]-F[-FG]+G");
         rs5.AddTerminal("G", "");
-        rs5.ValidateTerminals();
+        rs5.Validate();
 
         var DB = new LSystemDB();
         DB.AddSystem(rs);

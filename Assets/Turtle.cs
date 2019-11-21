@@ -6,29 +6,22 @@ using System.Linq;
 //turtle graphics class
 class Turtle
 {
-    Vector3 _pos;
-    Vector3 _heading;
+    Vector3 _pos, _heading;
     Stack<Vector3> _pointStack;
-    Stack<Vector3[]> _drawStack;
-    float _defaultAngle;
-    float _lineWidth;
-    float _stepSize;
-    float _lineRadius;
+    Stack<Vector3[]> _transformStack;
+    float _lineAngle, _lineWidth, _lineRadius, _stepSize;
 
     List<Mesh> _lineMeshes;
-    List<Matrix4x4> _transforms;
-    Mesh _renderMesh;
-    Material _material = new Material(Shader.Find("Particles/Standard Unlit"));
-    MeshRenderer meshRenderer;
+
+    public Mesh _finalMesh;
 
     public Turtle(float defaultAngle)
     {
         _pos = new Vector3();
         _heading = Vector3.up;
         _pointStack = new Stack<Vector3>();
-        _drawStack = new Stack<Vector3[]>();
-        _defaultAngle = defaultAngle;
-        _lineWidth = 0.01f;
+        _transformStack = new Stack<Vector3[]>();
+        _lineAngle = defaultAngle;
         _stepSize = 0.05f;
         _lineMeshes = new List<Mesh>();
         _lineRadius = 0.1f;
@@ -51,11 +44,11 @@ class Turtle
                     break;
 
                  case '+': //turn left by angle
-                    Turn(-1 * _defaultAngle);
+                    Turn(-1 * _lineAngle);
                     break;
 
                  case '-': //turn right by angle
-                    Turn(_defaultAngle);
+                    Turn(_lineAngle);
                     break;
                      
                  case '|': //turn around
@@ -64,13 +57,13 @@ class Turtle
 
                  case '[': //push pos & heading to memory
                     var memory = new Vector3[2] {_pos, _heading};
-                    _drawStack.Push(memory);
+                    _transformStack.Push(memory);
                     break;  
 
                  case ']': //pop pos & heading from memory
 
                     var recall = new Vector3[2];
-                    recall = _drawStack.Pop();
+                    recall = _transformStack.Pop();
                     _pos = recall[0];
                     _heading = recall[1];
                     break; 
@@ -82,7 +75,7 @@ class Turtle
 
                  case '!': //rescale line width
 
-                    _lineWidth *= 0.5f;
+                    _lineRadius *= 0.5f;
                     break;
 
                  default:
@@ -90,11 +83,12 @@ class Turtle
                     throw new ArgumentException(c + " is not a valid argument");
             }
         }
+
+
     }
 
     private void Move(bool draw = true)
     {
-
         if (draw)
         {
             AddPoint();
@@ -104,9 +98,7 @@ class Turtle
             //DrawLine();
         }
         else
-        { 
-            _pos += _heading * _stepSize;
-        }
+         _pos += _heading * _stepSize;
     }
 
     private void AddPoint(){
@@ -183,14 +175,10 @@ class Turtle
         var instances = _lineMeshes.Select(m => new CombineInstance() { mesh = m, transform = Matrix4x4.identity });
 
         finalMesh.CombineMeshes(instances.ToArray());
-        _renderMesh = finalMesh;
+        _finalMesh = finalMesh;
     }
 
-    public Mesh DrawTurtle()
-    {
-        return _renderMesh;
-        //Graphics.DrawMesh(_renderMesh, Matrix4x4.identity, _material, 0);
-    }
+
 }
 
 //questions :

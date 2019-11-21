@@ -1,7 +1,4 @@
 ﻿using UnityEngine;
-using Newtonsoft.Json;
-using System.IO;
-using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class GraphController : MonoBehaviour {
@@ -25,7 +22,7 @@ public class GraphController : MonoBehaviour {
 		string lSystemOutput = ls.Generate();
 		ls.Information();
 		
-		//use turtle to draw l system
+		//use turtle to create mesh of L system
 		turtle = new Turtle(rsTest._angle);
 		turtle.Decode(lSystemOutput);
         turtle.DrawMesh();
@@ -33,7 +30,7 @@ public class GraphController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        Graphics.DrawMesh(turtle.DrawTurtle(), Matrix4x4.identity, material, 0);
+        Graphics.DrawMesh(turtle._finalMesh, Matrix4x4.identity, material, 0);
     }
 }
 
