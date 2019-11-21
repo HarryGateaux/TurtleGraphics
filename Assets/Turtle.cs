@@ -165,33 +165,39 @@ class Turtle
     //requires the points, and a list of the lines
     private void DrawLineMesh()
     {
+
         Vector3 start = _pointStack.Pop();
         Vector3 end = _pointStack.Pop();
 
-        Vector3 startshift = start + new Vector3(5, 5, 5);
-        Vector3 endshift = start + new Vector3(5, 5, 5);
+        Vector3 lineDirection = end - start;
+        Vector3 norm = Vector3.Cross(lineDirection, Vector3.forward);
+
+        Vector3 startshift = start + 0.2f * norm;
+        Vector3 endshift = startshift + lineDirection;
         //Vector3 start = new Vector3(0, 0, 0);
         //Vector3 end = new Vector3(5, 5, 0);
-        Vector3 end2 = new Vector3(5, 6, 5);
 
-
-        Vector3[] vertices = new Vector3[3];
-        int[] indices = new int[3] { 0, 1, 2};
+        Vector3[] vertices = new Vector3[4];
+        int[] indices = new int[6] { 0, 2, 3, 3, 1, 0 };
 
         vertices[0] = start;
-        vertices[1] = end;
-        vertices[2] = startshift;
+        vertices[1] = startshift;
+        vertices[2] = end;
+        vertices[3] = endshift;
+
+
+
         //vertices[3] = endshift;
 
         Mesh mesh = new Mesh();
         mesh.vertices = vertices;
-        mesh.SetIndices(indices, MeshTopology.Triangles, 0);
-        //mesh.triangles = indices;
+        //mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+        mesh.triangles = indices;
         _lineMeshes.Add(mesh);
 
         var rotation = Quaternion.identity;
-        var scale = Vector3.one * 0.01f;
-        Matrix4x4 transform = Matrix4x4.TRS(end, rotation, scale);
+        var scale = Vector3.one;// * 0.01f;
+        Matrix4x4 transform = Matrix4x4.TRS(start, rotation, scale);
 
         _transforms.Add(transform);
     }
